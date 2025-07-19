@@ -1,0 +1,49 @@
+# Example 1: Simple port order - exactly as you wanted!
+apiVersion: network.http.crossplane.io/v1alpha1
+kind: PortOrder
+metadata:
+  name: open-ports-1
+spec:
+  forProvider:
+    source: "192.168.1.0/24"
+    destination: "192.168.2.0/24"
+    ports:
+      - type: tcp
+        number: 443
+  providerConfigRef:
+    name: default
+---
+# Example 2: Multiple ports
+apiVersion: network.http.crossplane.io/v1alpha1
+kind: PortOrder
+metadata:
+  name: open-multiple-ports
+spec:
+  forProvider:
+    source: "10.0.1.0/24"
+    destination: "10.0.2.0/24"
+    ports:
+      - type: tcp
+        number: 443
+      - type: tcp
+        number: 80
+      - type: udp
+        number: 53
+  providerConfigRef:
+    name: default
+---
+# Example 3: Custom API endpoint
+apiVersion: network.http.crossplane.io/v1alpha1
+kind: PortOrder
+metadata:
+  name: custom-endpoint-order
+spec:
+  forProvider:
+    source: "172.16.0.0/16"
+    destination: "172.17.0.0/16"
+    ports:
+      - type: tcp
+        number: 22
+    apiEndpoint: "https://internal-api.company.com/network/orders"
+  providerConfigRef:
+    name: default

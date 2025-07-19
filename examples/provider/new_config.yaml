@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: crossplane-system
+  name: http-provider-creds
+type: Opaque
+stringData:
+  credentials: |
+    {
+      "authType": "bearer",
+      "credentials": "your-api-token-here",
+      "headers": {
+        "X-API-Version": "v1",
+        "X-Client-ID": "crossplane-provider",
+        "X-Environment": "production"
+      }
+    }
+---
+apiVersion: http.crossplane.io/v1alpha1
+kind: ProviderConfig
+metadata:
+  name: default
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: crossplane-system
+      name: http-provider-creds
+      key: credentials
+---
+# Alternative: Using API Key authentication
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: crossplane-system
+  name: http-provider-apikey
+type: Opaque
+stringData:
+  credentials: |
+    {
+      "authType": "apikey",
+      "credentials": "sk-1234567890abcdef",
+      "headers": {
+        "X-API-Version": "v1",
+        "X-Organization": "my-org"
+      }
+    }
+---
+# Alternative: Using Basic authentication
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: crossplane-system
+  name: http-provider-basic
+type: Opaque
+stringData:
+  credentials: |
+    {
+      "authType": "basic",
+      "credentials": "dXNlcm5hbWU6cGFzc3dvcmQ=",
+      "headers": {
+        "Accept": "application/json",
+        "X-Request-Source": "crossplane"
+      }
+    }
